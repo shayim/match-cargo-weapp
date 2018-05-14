@@ -1,0 +1,24 @@
+<view class="login">
+    <view class="user-image"> 
+        <image mode="aspectFill" 
+            src="{{userInfo && userInfo.avatarUrl ? userInfo.avatarUrl : '../images/user-unlogin.png'}}">
+        </image>
+    </view>
+    <view class="user-name" 
+          wx:if="{{userInfo && userInfo.nickName}}">
+        <text>
+            {{userInfo.nickName}}
+        </text>
+    </view>
+    <view class="btn-group">
+        <button wx:if="{{!userInfo}}" loading="{{wxLogin}}
+                bindgetuserinfo="doLogin"
+                type="primary" 
+                open-type="getUserInfo">
+                微信登陆
+        </button>
+        <button disabled="{{!userInfo}}" bindtap="register" type="default">
+            注册
+        </button>
+    </view>
+</view>

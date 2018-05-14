@@ -1,0 +1,32 @@
+.login {
+    display:flex;
+    flex-direction: column;
+    align-content: center;
+}
+.login .user {
+    flex: 1;
+}
+.user-image, .user-name {
+   margin: 40rpx auto;
+}
+.user-image {
+    border-radius: 200rpx;
+    width: 350rpx;
+    height: 350rpx;
+    background-color: #fff;
+}
+.user-image image {
+    margin: 47rpx 47rpx;
+    width: 256rpx;
+    height: 256rpx;
+}
+.user-name {
+    margin-top: 0;
+    color: #8E8E93;
+}
+.btn-group {
+    margin: 20rpx 80rpx;
+}
+.btn-group button {
+    margin-bottom: 20rpx;
+}
