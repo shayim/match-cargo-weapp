@@ -9,5 +9,6 @@
         "navigationBarBackgroundColor": "#333",
         "navigationBarTitleText": "迈驰货运保险",
         "navigationBarTextStyle": "white"
-    }
+    },
+    "workers": "workers"
 }

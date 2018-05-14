@@ -3,19 +3,25 @@ var config = require('../../config');
 var {
   modal
 } = require('../helpers/index');
+var app = getApp();
 
 Page({
   data: {
-    wxLogin: false
+    wxLogin: false,
+    lang: app.systemInfo.language,
+    userInfo: app.userInfo
   },
 
   doLogin(e) {
+    console.log(e);
+
     var that = this;
     that.setData({
       wxLogin: true
     });
     qcloud.login({
-      userInfo: e.detail.userInfo, // from client
+
+      userInfoData: e.detail,
 
       success(result) {
         that.setData({
@@ -26,25 +32,25 @@ Page({
 
       fail(error) {
         modal.showModal('登录失败', error);
-        that.setData({wxLogin: false});
+        that.setData({ wxLogin: false });
       }
     });
   },
 
   doRequest() {
-    if(!qcloud.Session.get()) return;
-    
+    if (!qcloud.Session.get()) return;
+
     var that = this;
-    that.setData({wxLogin:true});
+    that.setData({ wxLogin: true });
     qcloud.request({
       url: config.service.requestUrl,
       success(result) {
         that.setData({
-          userInfo: result.data.data, wxLogin:false
+          userInfo: result.data.data, wxLogin: false
         })
       },
       fail(error) {
-        that.setData({wxLogin:false});
+        that.setData({ wxLogin: false });
       }
     });
   },

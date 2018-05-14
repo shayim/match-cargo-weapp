@@ -52,7 +52,7 @@ var getWxLoginResult = function getLoginCode(callback) {
     });
 };
 
-var noop = function noop() {};
+var noop = function noop() { };
 var defaultOptions = {
     method: 'GET',
     success: noop,
@@ -74,7 +74,7 @@ var login = function login(options) {
     // options = utils.extend({}, defaultOptions, options);
     options = Object.assign({}, defaultOptions, options);
 
-    console.log(options.userInfo);
+    console.log(options.userInfoData);
 
     if (!defaultOptions.loginUrl) {
         options.fail(new LoginError(constants.ERR_INVALID_PARAMS, '登录错误：缺少登录地址，请通过 setLoginUrl() 方法设置登录地址'));
@@ -88,7 +88,7 @@ var login = function login(options) {
         }
 
         console.log(wxLoginResult);
-        
+
         var userInfo = wxLoginResult.userInfo;
 
         // 构造请求头，包含 code、encryptedData 和 iv
@@ -118,7 +118,7 @@ var login = function login(options) {
                         statusCode: 200, 
                         errMsg: "request:ok"
                     }
-                */ 
+                */
 
                 var data = result.data;
 
@@ -134,7 +134,104 @@ var login = function login(options) {
                         options.fail(noSessionError);
                     }
 
-                // 没有正确响应会话信息
+                    // 没有正确响应会话信息
+                } else {
+                    var noSessionError = new LoginError(constants.ERR_LOGIN_SESSION_NOT_RECEIVED, JSON.stringify(data));
+                    options.fail(noSessionError);
+                }
+            },
+
+            // 响应错误
+            fail: function (loginResponseError) {
+                var error = new LoginError(constants.ERR_LOGIN_FAILED, '登录失败，可能是网络错误或者服务器发生异常');
+                options.fail(error);
+            },
+        });
+    });
+
+    doLogin();
+};
+
+// opendata login
+
+var getCodeResult = function get_code(callback) {
+    wx.login({
+        success: function (codeResult) {
+            callback(null, codeResult.code)
+        },
+        fail: function (codeError) {
+            var error = new LoginError(constants.ERR_WX_LOGIN_FAILED, '微信登录失败');
+            error.detail = codeError;
+            callback(error, null);
+        }
+    })
+}
+
+var openDataLogin = function open_data_login(options) {
+    options = Object.assign({}, defaultOptions, options);
+
+    console.log(options.userInfoData);
+
+    if (!defaultOptions.loginUrl) {
+        options.fail(new LoginError(constants.ERR_INVALID_PARAMS, '登录错误：缺少登录地址，请通过 setLoginUrl() 方法设置登录地址'));
+        return;
+    }
+
+    var doLogin = () => getCodeResult(function (error, code) {
+        if (error) {
+            options.fail(error);
+            return;
+        }
+
+        console.log('code', code);
+
+        var userInfo = options.userInfoData.userInfo;
+
+        console.log('userInfo', userInfo)
+
+        // 构造请求头，包含 code、encryptedData 和 iv
+        var header = {
+            [constants.WX_HEADER_CODE]: code,
+            [constants.WX_HEADER_ENCRYPTED_DATA]: options.userInfoData.encryptedData,
+            [constants.WX_HEADER_IV]: options.userInfoData.iv
+        };
+
+        console.log(header)
+
+        // 请求服务器登录地址，获得会话信息
+        wx.request({
+            url: options.loginUrl,
+            header: header,
+            method: options.method,
+            data: options.data,
+            success: function (result) {
+                /*
+                    result : { 
+                        data: { 
+                            code: 0,  
+                            data: {skey, userInfo }
+                        }, 
+                        header: {}, 
+                        statusCode: 200, 
+                        errMsg: "request:ok"
+                    }
+                */
+
+                var data = result.data;
+
+                // 成功地响应会话信息
+                if (data && data.code === 0 && data.data.skey) {
+                    var res = data.data
+                    if (res.userinfo) {
+                        Session.set(res.skey);
+                        options.success(userInfo);
+                    } else {
+                        var errorMessage = '登录失败(' + data.error + ')：' + (data.message || '未知错误');
+                        var noSessionError = new LoginError(constants.ERR_LOGIN_SESSION_NOT_RECEIVED, errorMessage);
+                        options.fail(noSessionError);
+                    }
+
+                    // 没有正确响应会话信息
                 } else {
                     var noSessionError = new LoginError(constants.ERR_LOGIN_SESSION_NOT_RECEIVED, JSON.stringify(data));
                     options.fail(noSessionError);
@@ -158,6 +255,6 @@ var setLoginUrl = function (loginUrl) {
 
 module.exports = {
     LoginError: LoginError,
-    login: login,
+    login: openDataLogin,
     setLoginUrl: setLoginUrl,
 };

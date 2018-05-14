@@ -7,18 +7,19 @@
     <view class="user-name" 
           wx:if="{{userInfo && userInfo.nickName}}">
         <text>
-            {{userInfo.nickName}}
+            微信昵称：{{userInfo.nickName}}
         </text>
     </view>
     <view class="btn-group">
         <button wx:if="{{!userInfo}}" loading="{{wxLogin}}
                 bindgetuserinfo="doLogin"
+                lang = "{{lang}}"
                 type="primary" 
                 open-type="getUserInfo">
                 微信登陆
         </button>
         <button disabled="{{!userInfo}}" bindtap="register" type="default">
-            注册
+            应用注册
         </button>
     </view>
 </view>

@@ -1,16 +1,8 @@
-.login {
-    display:flex;
-    flex-direction: column;
-    align-content: center;
-}
-.login .user {
-    flex: 1;
-}
 .user-image, .user-name {
    margin: 40rpx auto;
 }
 .user-image {
-    border-radius: 200rpx;
+    border-radius: 175rpx;
     width: 350rpx;
     height: 350rpx;
     background-color: #fff;
@@ -21,7 +13,8 @@
     height: 256rpx;
 }
 .user-name {
-    margin-top: 0;
+    margin-top: -20rpx;
+   text-align:center;
     color: #8E8E93;
 }
 .btn-group {
