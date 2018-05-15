@@ -15,6 +15,7 @@
                 bindgetuserinfo="doLogin"
                 lang = "{{lang}}"
                 type="primary" 
+                disabled = "{{wxLogin}}"
                 open-type="getUserInfo">
                 微信登陆
         </button>

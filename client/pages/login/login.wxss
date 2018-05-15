@@ -17,9 +17,3 @@
    text-align:center;
     color: #8E8E93;
 }
-.btn-group {
-    margin: 20rpx 80rpx;
-}
-.btn-group button {
-    margin-bottom: 20rpx;
-}

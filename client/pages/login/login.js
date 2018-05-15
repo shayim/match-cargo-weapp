@@ -1,62 +1,67 @@
-var qcloud = require('../../vendor/wafer2-client-sdk/index');
-var config = require('../../config');
-var {
-  modal
-} = require('../helpers/index');
-var app = getApp();
+/* global getApp Page */
+
+var qcloud = require('../../vendor/wafer2-client-sdk/index')
+var config = require('../../config')
+var { modal } = require('../helpers/index')
+var app = getApp()
 
 Page({
   data: {
     wxLogin: false,
-    lang: app.systemInfo.language,
-    userInfo: app.userInfo
+    lang: app.systemInfo.language
   },
 
-  doLogin(e) {
-    console.log(e);
-
-    var that = this;
+  /**
+     * wx login
+     * param e { type:"getuserinfo",
+     *           detail: { encryptoData, iv, signature, rawData
+     *                     userInfo: { nickName, gender, language, city, province, country, avatarUrl }}
+     */
+  doLogin (e) {
+    var that = this
     that.setData({
       wxLogin: true
-    });
+    })
     qcloud.login({
-
       userInfoData: e.detail,
-
-      success(result) {
+      success (result) {
+        app.userInfo = result
         that.setData({
           userInfo: result,
           wxLogin: false
-        });
-      },
-
-      fail(error) {
-        modal.showModal('登录失败', error);
-        that.setData({ wxLogin: false });
-      }
-    });
-  },
-
-  doRequest() {
-    if (!qcloud.Session.get()) return;
-
-    var that = this;
-    that.setData({ wxLogin: true });
-    qcloud.request({
-      url: config.service.requestUrl,
-      success(result) {
-        that.setData({
-          userInfo: result.data.data, wxLogin: false
         })
       },
-      fail(error) {
-        that.setData({ wxLogin: false });
+      fail (error) {
+        modal.showModal('登录失败', error)
+        that.setData({ wxLogin: false })
       }
-    });
+    })
+  },
+
+  doRequest () {
+    if (!qcloud.Session.get()) return
+
+    var that = this
+    that.setData({ wxLogin: true })
+    qcloud.request({
+      url: config.service.requestUrl,
+      success (result) {
+        app.userInfo = result.data.data
+        that.setData({
+          userInfo: result.data.data,
+          wxLogin: false
+        })
+      },
+      fail (error) {
+        console.log(error)
+        that.setData({ wxLogin: false })
+      }
+    })
   },
 
   onLoad: function (options) {
-    this.doRequest();
+    console.log('login loaded')
+    this.doRequest()
   },
 
   /**
