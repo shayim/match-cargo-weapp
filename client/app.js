@@ -8,6 +8,8 @@ App({
 
     this.systemInfo = systemInfo.get()
     userService.validateUser().then(result => { this.userInfo = userService.getUserInfo() })
+
+    userService.getUserScopes().then(result => { this.userAuthScopes = result })
   },
 
   userInfo: null,

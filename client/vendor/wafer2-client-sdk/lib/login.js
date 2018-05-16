@@ -257,6 +257,6 @@ var setLoginUrl = function (loginUrl) {
 
 module.exports = {
   LoginError: LoginError,
-  login: openDataLogin,
+  openDataLogin: openDataLogin,
   setLoginUrl: setLoginUrl
 }

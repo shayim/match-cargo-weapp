@@ -1,12 +1,12 @@
 const {userService} = require('../../services/index')
-
+const app = getApp()
 Page({
   data: {
 
   },
 
   addApplicant () {
-
+    console.log(app.userAuthScopes)
   },
 
   addInsured () {

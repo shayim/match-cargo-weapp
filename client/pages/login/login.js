@@ -20,7 +20,7 @@ Page({
     that.setData({
       wxLogin: true
     })
-    qcloud.login({
+    qcloud.openDataLogin({
       userInfoData: e.detail,
       success (result) {
         userService.saveUserInfo(result)
@@ -59,7 +59,6 @@ Page({
   },
 
   onLoad: function (options) {
-    console.log('login loaded')
     this.doRequest()
   },
 

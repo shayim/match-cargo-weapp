@@ -13,7 +13,6 @@ const validateUser = function () {
         qcloud.Session.clear()
         return resolve(false)
       }
-
     })
   })
 }
@@ -43,4 +42,14 @@ const saveUserInfo = (userInfo) => {
   }
 }
 
-module.exports = { validateUser, getUserInfo, saveUserInfo }
+const getUserScopes = () => {
+  return new Promise((resolve, reject) => {
+    wx.getSetting({
+      success: (res) => {
+        resolve(res.authSetting)
+      }
+    })
+  })
+}
+
+module.exports = { validateUser, getUserInfo, saveUserInfo, getUserScopes }
