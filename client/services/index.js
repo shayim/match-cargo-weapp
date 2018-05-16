@@ -1,11 +1,11 @@
 const toast = require('./toast')
 const modal = require('./modal')
 const systemInfo = require('./systemInfo')
-const userInfo = require('./requestUserInfo')
+const userService = require('./userService')
 
 module.exports = {
   toast,
   modal,
   systemInfo,
-  userInfo
+  userService
 }

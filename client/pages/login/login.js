@@ -1,8 +1,6 @@
-/* global getApp Page */
-
 var qcloud = require('../../vendor/wafer2-client-sdk/index')
 var config = require('../../config')
-var { modal } = require('../helpers/index')
+var { modal, userService } = require('../../services/index')
 var app = getApp()
 
 Page({
@@ -25,7 +23,8 @@ Page({
     qcloud.login({
       userInfoData: e.detail,
       success (result) {
-        app.userInfo = result
+        userService.saveUserInfo(result)
+
         that.setData({
           userInfo: result,
           wxLogin: false

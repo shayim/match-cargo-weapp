@@ -1,4 +1,4 @@
-const app = getApp()
+const {userService} = require('../../services/index')
 
 Page({
   data: {
@@ -6,42 +6,30 @@ Page({
   },
 
   addApplicant () {
-    if (this.checkUserInfo()) {
-      console.log(app.userInfo)
-    }
+
   },
 
   addInsured () {
-    if (this.checkUserInfo()) {
 
-    }
   },
 
   addCargo () {
-    if (this.checkUserInfo()) {
 
-    }
   },
 
   addConveyance () {
-    if (this.checkUserInfo()) {
 
-    }
   },
 
   addVoyage () {
-    if (this.checkUserInfo()) {
 
-    }
   },
 
-  checkUserInfo () {
-    if (!app.userInfo) {
-      wx.navigateTo({ url: '../login/login' })
-      return false
-    }
-    return true
-  },
-
-  onLoad () {}
+  onLoad () {
+    userService.validateUser().then(result => {
+      if (!result) {
+        wx.navigateTo({url: '../login/login'})
+      }
+    })
+  }
 })

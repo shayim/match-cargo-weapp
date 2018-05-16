@@ -1,25 +1,25 @@
-var constants = require('./lib/constants');
-var login = require('./lib/login');
-var Session = require('./lib/session');
-var request = require('./lib/request');
-var Tunnel = require('./lib/tunnel');
+var constants = require('./lib/constants')
+var login = require('./lib/login')
+var Session = require('./lib/session')
+var request = require('./lib/request')
+var Tunnel = require('./lib/tunnel')
 
 var exports = module.exports = {
-    login: login.login,
-    setLoginUrl: login.setLoginUrl,
-    LoginError: login.LoginError,
+  login: login.login,
+  setLoginUrl: login.setLoginUrl,
+  LoginError: login.LoginError,
 
-    Session: Session,
+  Session: Session,
 
-    request: request.request,
-    RequestError: request.RequestError,
+  request: request.request,
+  RequestError: request.RequestError,
 
-    Tunnel: Tunnel,
-};
+  Tunnel: Tunnel
+}
 
 // 导出错误类型码
 Object.keys(constants).forEach(function (key) {
-    if (key.indexOf('ERR_') === 0) {
-        exports[key] = constants[key];
-    }
-});
+  if (key.indexOf('ERR_') === 0) {
+    exports[key] = constants[key]
+  }
+})
