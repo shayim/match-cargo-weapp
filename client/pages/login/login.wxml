@@ -1,7 +1,7 @@
 <view class="login">
     <view class="user-image"> 
         <image mode="aspectFill" 
-            src="{{userInfo && userInfo.avatarUrl ? userInfo.avatarUrl : '../images/user-unlogin.png'}}">
+            src="{{userInfo && userInfo.avatarUrl ? userInfo.avatarUrl : '../../images/user-unlogin.png'}}">
         </image>
     </view>
     <view class="user-name" 
