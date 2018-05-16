@@ -22,35 +22,35 @@ var LoginError = (function () {
 /**
  * 微信登录，获取 code 和 encryptData
  */
-// var getWxLoginResult = function getLoginCode (callback) {
-//   wx.login({
-//     success: function (loginResult) {
-//       wx.getUserInfo({
-//         lang: 'zh_CN',
-//         success: function (userResult) {
-//           callback(null, {
-//             code: loginResult.code,
-//             encryptedData: userResult.encryptedData,
-//             iv: userResult.iv,
-//             userInfo: userResult.userInfo
-//           })
-//         },
+var getWxLoginResult = function getLoginCode (callback) {
+  wx.login({
+    success: function (loginResult) {
+      wx.getUserInfo({
+        lang: 'zh_CN',
+        success: function (userResult) {
+          callback(null, {
+            code: loginResult.code,
+            encryptedData: userResult.encryptedData,
+            iv: userResult.iv,
+            userInfo: userResult.userInfo
+          })
+        },
 
-//         fail: function (userError) {
-//           var error = new LoginError(constants.ERR_WX_GET_USER_INFO, '获取微信用户信息失败，请检查网络状态')
-//           error.detail = userError
-//           callback(error, null)
-//         }
-//       })
-//     },
+        fail: function (userError) {
+          var error = new LoginError(constants.ERR_WX_GET_USER_INFO, '获取微信用户信息失败，请检查网络状态')
+          error.detail = userError
+          callback(error, null)
+        }
+      })
+    },
 
-//     fail: function (loginError) {
-//       var error = new LoginError(constants.ERR_WX_LOGIN_FAILED, '微信登录失败，请检查网络状态')
-//       error.detail = loginError
-//       callback(error, null)
-//     }
-//   })
-// }
+    fail: function (loginError) {
+      var error = new LoginError(constants.ERR_WX_LOGIN_FAILED, '微信登录失败，请检查网络状态')
+      error.detail = loginError
+      callback(error, null)
+    }
+  })
+}
 
 var noop = function noop () { }
 var defaultOptions = {
@@ -70,104 +70,8 @@ var defaultOptions = {
  * @param {Function} options.success(userInfo) 登录成功后的回调函数，参数 userInfo 微信用户信息
  * @param {Function} options.fail(error) 登录失败后的回调函数，参数 error 错误信息
  */
-// var login = function login (options) {
-//   // options = utils.extend({}, defaultOptions, options);
-//   options = Object.assign({}, defaultOptions, options)
-
-//   console.log(options.userInfoData)
-
-//   if (!defaultOptions.loginUrl) {
-//     options.fail(new LoginError(constants.ERR_INVALID_PARAMS, '登录错误：缺少登录地址，请通过 setLoginUrl() 方法设置登录地址'))
-//     return
-//   }
-
-//   var doLogin = () => getWxLoginResult(function (wxLoginError, wxLoginResult) {
-//     if (wxLoginError) {
-//       options.fail(wxLoginError)
-//       return
-//     }
-
-//     console.log(wxLoginResult)
-
-//     var userInfo = wxLoginResult.userInfo
-
-//     // 构造请求头，包含 code、encryptedData 和 iv
-//     var code = wxLoginResult.code
-//     var encryptedData = wxLoginResult.encryptedData
-//     var iv = wxLoginResult.iv
-//     var header = {}
-
-//     header[constants.WX_HEADER_CODE] = code
-//     header[constants.WX_HEADER_ENCRYPTED_DATA] = encryptedData
-//     header[constants.WX_HEADER_IV] = iv
-
-//     // 请求服务器登录地址，获得会话信息
-//     wx.request({
-//       url: options.loginUrl,
-//       header: header,
-//       method: options.method,
-//       data: options.data,
-//       success: function (result) {
-//         /*
-//                     result : {
-//                         data: {
-//                             code: 0,
-//                             data: {skey, userInfo }
-//                         },
-//                         header: {},
-//                         statusCode: 200,
-//                         errMsg: "request:ok"
-//                     }
-//                 */
-
-//         var data = result.data
-
-//         // 成功地响应会话信息
-//         if (data && data.code === 0 && data.data.skey) {
-//           var res = data.data
-//           if (res.userinfo) {
-//             Session.set(res.skey)
-//             options.success(userInfo)
-//           } else {
-//             var errorMessage = '登录失败(' + data.error + ')：' + (data.message || '未知错误')
-//             var noSessionError = new LoginError(constants.ERR_LOGIN_SESSION_NOT_RECEIVED, errorMessage)
-//             options.fail(noSessionError)
-//           }
-
-//           // 没有正确响应会话信息
-//         } else {
-//           var noSessionError = new LoginError(constants.ERR_LOGIN_SESSION_NOT_RECEIVED, JSON.stringify(data))
-//           options.fail(noSessionError)
-//         }
-//       },
-
-//       // 响应错误
-//       fail: function (loginResponseError) {
-//         var error = new LoginError(constants.ERR_LOGIN_FAILED, '登录失败，可能是网络错误或者服务器发生异常')
-//         options.fail(error)
-//       }
-//     })
-//   })
-
-//   doLogin()
-// }
-
-// opendata login
-
-var getCodeResult = function getCode (callback) {
-  wx.login({
-    success: function (codeResult) {
-      callback(null, codeResult.code)
-    },
-    fail: function (codeError) {
-      var error = new LoginError(constants.ERR_WX_LOGIN_FAILED, '微信登录失败')
-      error.detail = codeError
-      callback(error, null)
-    }
-  })
-}
-
-var openDataLogin = function openDataLogin (options) {
+var login = function login (options) {
+  // options = utils.extend({}, defaultOptions, options);
   options = Object.assign({}, defaultOptions, options)
 
   console.log(options.userInfoData)
@@ -177,26 +81,25 @@ var openDataLogin = function openDataLogin (options) {
     return
   }
 
-  var doLogin = () => getCodeResult(function (error, code) {
-    if (error) {
-      options.fail(error)
+  var doLogin = () => getWxLoginResult(function (wxLoginError, wxLoginResult) {
+    if (wxLoginError) {
+      options.fail(wxLoginError)
       return
     }
 
-    console.log('code', code)
+    console.log(wxLoginResult)
 
-    var userInfo = options.userInfoData.userInfo
-
-    console.log('userInfo', userInfo)
+    var userInfo = wxLoginResult.userInfo
 
     // 构造请求头，包含 code、encryptedData 和 iv
-    var header = {
-      [constants.WX_HEADER_CODE]: code,
-      [constants.WX_HEADER_ENCRYPTED_DATA]: options.userInfoData.encryptedData,
-      [constants.WX_HEADER_IV]: options.userInfoData.iv
-    }
+    var code = wxLoginResult.code
+    var encryptedData = wxLoginResult.encryptedData
+    var iv = wxLoginResult.iv
+    var header = {}
 
-    console.log(header)
+    header[constants.WX_HEADER_CODE] = code
+    header[constants.WX_HEADER_ENCRYPTED_DATA] = encryptedData
+    header[constants.WX_HEADER_IV] = iv
 
     // 请求服务器登录地址，获得会话信息
     wx.request({
@@ -219,8 +122,6 @@ var openDataLogin = function openDataLogin (options) {
 
         var data = result.data
 
-        console.log('login data', data)
-
         // 成功地响应会话信息
         if (data && data.code === 0 && data.data.skey) {
           var res = data.data
@@ -229,8 +130,8 @@ var openDataLogin = function openDataLogin (options) {
             options.success(userInfo)
           } else {
             var errorMessage = '登录失败(' + data.error + ')：' + (data.message || '未知错误')
-            var unKnownError = new LoginError(constants.ERR_LOGIN_SESSION_NOT_RECEIVED, errorMessage)
-            options.fail(unKnownError)
+            let noSessionError = new LoginError(constants.ERR_LOGIN_SESSION_NOT_RECEIVED, errorMessage)
+            options.fail(noSessionError)
           }
 
           // 没有正确响应会话信息
@@ -251,12 +152,112 @@ var openDataLogin = function openDataLogin (options) {
   doLogin()
 }
 
-var setLoginUrl = function (loginUrl) {
-  defaultOptions.loginUrl = loginUrl
-}
+// opendata login
+
+// var getCodeResult = function getCode (callback) {
+//   wx.login({
+//     success: function (codeResult) {
+//       callback(null, codeResult.code)
+//     },
+//     fail: function (codeError) {
+//       var error = new LoginError(constants.ERR_WX_LOGIN_FAILED, '微信登录失败')
+//       error.detail = codeError
+//       callback(error, null)
+//     }
+//   })
+// }
+
+// var openDataLogin = function openDataLogin (options) {
+//   options = Object.assign({}, defaultOptions, options)
+
+//   console.log(options.userInfoData)
+
+//   if (!defaultOptions.loginUrl) {
+//     options.fail(new LoginError(constants.ERR_INVALID_PARAMS, '登录错误：缺少登录地址，请通过 setLoginUrl() 方法设置登录地址'))
+//     return
+//   }
+
+//   var doLogin = () => getCodeResult(function (error, code) {
+//     if (error) {
+//       options.fail(error)
+//       return
+//     }
+
+//     console.log('code', code)
+
+//     var userInfo = options.userInfoData.userInfo
+
+//     console.log('userInfo', userInfo)
+
+//     // 构造请求头，包含 code、encryptedData 和 iv
+//     var header = {
+//       [constants.WX_HEADER_CODE]: code,
+//       [constants.WX_HEADER_ENCRYPTED_DATA]: options.userInfoData.encryptedData,
+//       [constants.WX_HEADER_IV]: options.userInfoData.iv
+//     }
+
+//     console.log(header)
+
+//     // 请求服务器登录地址，获得会话信息
+//     wx.request({
+//       url: options.loginUrl,
+//       header: header,
+//       method: options.method,
+//       data: options.data,
+//       success: function (result) {
+//         /*
+//                     result : {
+//                         data: {
+//                             code: 0,
+//                             data: {skey, userInfo }
+//                         },
+//                         header: {},
+//                         statusCode: 200,
+//                         errMsg: "request:ok"
+//                     }
+//                 */
+
+//         var data = result.data
+
+//         console.log('login data', data)
+
+//         // 成功地响应会话信息
+//         if (data && data.code === 0 && data.data.skey) {
+//           var res = data.data
+//           if (res.userinfo) {
+//             Session.set(res.skey)
+//             options.success(userInfo)
+//           } else {
+//             var errorMessage = '登录失败(' + data.error + ')：' + (data.message || '未知错误')
+//             var unKnownError = new LoginError(constants.ERR_LOGIN_SESSION_NOT_RECEIVED, errorMessage)
+//             options.fail(unKnownError)
+//           }
+
+//           // 没有正确响应会话信息
+//         } else {
+//           var noSessionError = new LoginError(constants.ERR_LOGIN_SESSION_NOT_RECEIVED, JSON.stringify(data))
+//           options.fail(noSessionError)
+//         }
+//       },
+
+//       // 响应错误
+//       fail: function (loginResponseError) {
+//         var error = new LoginError(constants.ERR_LOGIN_FAILED, '登录失败，可能是网络错误或者服务器发生异常')
+//         options.fail(error)
+//       }
+//     })
+//   })
+
+//   doLogin()
+// }
+
+// var setLoginUrl = function (loginUrl) {
+//   defaultOptions.loginUrl = loginUrl
+// }
 
 module.exports = {
   LoginError: LoginError,
-  openDataLogin: openDataLogin,
-  setLoginUrl: setLoginUrl
+  login: login
+  // openDataLogin: openDataLogin,
+  // setLoginUrl: setLoginUrl
 }

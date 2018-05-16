@@ -31,7 +31,7 @@ Page({
         })
       },
       fail (error) {
-        modal.showModal('登录失败', error)
+        modal.showModal('登录失败', error.message)
         that.setData({ wxLogin: false })
       }
     })

@@ -1,4 +1,5 @@
 var constants = require('./lib/constants')
+var { openDataLogin, setLoginUrl } = require('./lib/openDataLogin')
 var login = require('./lib/login')
 var Session = require('./lib/session')
 var request = require('./lib/request')
@@ -6,8 +7,8 @@ var Tunnel = require('./lib/tunnel')
 
 var exports = module.exports = {
   login: login.login,
-  openDataLogin: login.openDataLogin,
-  setLoginUrl: login.setLoginUrl,
+  openDataLogin: openDataLogin,
+  setLoginUrl: setLoginUrl,
   LoginError: login.LoginError,
 
   Session: Session,
@@ -16,6 +17,7 @@ var exports = module.exports = {
   RequestError: request.RequestError,
 
   Tunnel: Tunnel
+
 }
 
 // 导出错误类型码
