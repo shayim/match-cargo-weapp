@@ -1,4 +1,4 @@
-@import '../templates/addApplicant.wxss'
+@import '../templates/applicant/addApplicant.wxss'
 
 .match-logo, .title {
     margin: 50rpx auto;

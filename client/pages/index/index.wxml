@@ -1,4 +1,4 @@
-<import src="../templates/addApplicant.wxml"/>
+<import src="../templates/applicant/addApplicant.wxml"/>
 
 <view class="container">
     <view class="match-logo"  >
@@ -8,13 +8,13 @@
       <text>添加常用信息</text>
     </view>
     <view class="btn-group">
-        <button type="primary" size="24" plain="{{true}}" bindtap="addApplicant" hover-class="button-hover">投保人</button>
-        <button type="primary" size="24" plain="{{true}}" bindtap="addInsured" hover-class="button-hover">被保险人</button>
-        <button type="primary" size="24" plain="{{true}}" bindtap="addCargo" hover-class="button-hover">被保货物</button>
-        <button type="primary" size="24" plain="{{true}}" bindtap="addConveyance" hover-class="button-hover">运输方式</button>
-        <button type="primary" size="24" plain="{{true}}" bindtap="addVoyage" hover-class="button-hover">运输航线</button>
+        <button type="primary" size="24" plain="{{true}}" bindtap="add" hover-class="button-hover" data-controller="applicant">投保人</button>
+        <button type="primary" size="24" plain="{{true}}" bindtap="add" hover-class="button-hover" data-controller="insured">被保险人</button>
+        <button type="primary" size="24" plain="{{true}}" bindtap="add" hover-class="button-hover" data-controller="cargo">被保货物</button>
+        <button type="primary" size="24" plain="{{true}}" bindtap="add" hover-class="button-hover" data-controller="conveyance">运输方式</button>
+        <button type="primary" size="24" plain="{{true}}" bindtap="add" hover-class="button-hover" data-controller="voyage">运输航线</button>
     </view>
 </view>
 
 
-<template wx:if="{{selected=='addApplicant'}}" is="addApplicant" data="{{applicant, placeholder}}"/>
+<template wx:if="{{selected=='add-applicant'}}" is="add-applicant" data="{{applicant, placeholder}}"/>

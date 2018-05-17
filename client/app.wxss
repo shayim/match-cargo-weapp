@@ -4,7 +4,7 @@ page {
     font-size: 16px;
 }
 /* ------------------------------------------- */
-/* ***************DISPLAY START ****************/
+/* ***************   DISPLAY    ****************/
 /* ------------------------------------------- */
 
 .container {
@@ -22,6 +22,10 @@ page {
     background-color: #eee;
 }
 
+.d-inline {
+  display: inline;
+}
+
 .d-block {
   display: block;
 }
@@ -31,7 +35,7 @@ page {
 }
 
 /* ------------------------------------------- */
-/* ***************DISPLAY END ******************/
+/* ***************            ******************/
 /* ------------------------------------------- */
 
 .h1 {
@@ -93,17 +97,25 @@ page {
 .form-inline input {
    flex: 1
 }
+switch {
+  margin-top: -5rpx;
+  padding: 0;
+}
+
 .control-group {
+  height: 50rpx;
   display: flex;
   flex-direction: row;
   background-color: #fff;
-  line-height: 48rpx;
   padding: 10rpx;
-  margin-bottom: 20rpx;
+   margin-top: 40rpx;
+  margin-bottom: 40rpx;
 }
+
 
 .control-label {
   margin-right: 20rpx;
+  flex: 1;
 }
 
 .btn-group {

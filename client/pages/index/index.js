@@ -1,26 +1,27 @@
-const {userService} = require('../../services/index')
+const { userService } = require('../../services/index')
 Page({
   data: {
-    selected: '',
-    applicant: {type: '企业'},
-    placeholder: {name: '名称', id: '执照编号'}
+    tplbtns: [{ zh_CN: '投保人', en: 'applicant' }, { zh_CN: '被保险人', en: 'insured' }],
+    selected: 'add-insured',
+    applicant: { type: '企业' },
+    placeholder: { name: '名称', id: '执照编号' }
   },
 
   changeApplicantType (e) {
     if (e.detail.value) {
-      this.setData({applicant: {type: '个人'}, placeholder: {name: '姓名', id: '身份证号'}})
+      this.setData({ applicant: { type: '企业' }, placeholder: { name: '名称', id: '执照编号' } })
     } else {
-      this.setData({applicant: {type: '企业'}, placeholder: {name: '名称', id: '执照编号'}})
+      this.setData({ applicant: { type: '个人' }, placeholder: { name: '姓名', id: '身份证号' } })
     }
   },
 
   submitForm (e) {
     console.log(e)
-    this.setData({selected: ''})
+    this.setData({ selected: '' })
   },
 
-  addApplicant () {
-    this.setData({selected: 'addApplicant'})
+  add (e) {
+    console.log(e.currentTarget.dataset.controller)
   },
 
   addInsured () {
@@ -42,7 +43,7 @@ Page({
   onLoad () {
     userService.validateUser().then(result => {
       if (!result) {
-        wx.navigateTo({url: '../login/login'})
+        wx.navigateTo({ url: '../login/login' })
       }
     })
   }
