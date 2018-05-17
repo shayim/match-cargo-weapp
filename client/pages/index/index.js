@@ -1,12 +1,26 @@
 const {userService} = require('../../services/index')
-const app = getApp()
 Page({
   data: {
+    selected: '',
+    applicant: {type: '企业'},
+    placeholder: {name: '名称', id: '执照编号'}
+  },
 
+  changeApplicantType (e) {
+    if (e.detail.value) {
+      this.setData({applicant: {type: '个人'}, placeholder: {name: '姓名', id: '身份证号'}})
+    } else {
+      this.setData({applicant: {type: '企业'}, placeholder: {name: '名称', id: '执照编号'}})
+    }
+  },
+
+  submitForm (e) {
+    console.log(e)
+    this.setData({selected: ''})
   },
 
   addApplicant () {
-    console.log(app.userAuthScopes)
+    this.setData({selected: 'addApplicant'})
   },
 
   addInsured () {

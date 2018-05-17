@@ -22,7 +22,8 @@ var config = {
 
     // 上传图片接口
     uploadUrl: `${host}/weapp/upload`
-  }
+  },
+  WX_SESSION_MAGIC_ID: 'F2C224D4-2BCE-4C64-AF9F-A6D872000D1A'
 }
 
 module.exports = config

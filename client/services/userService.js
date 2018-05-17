@@ -1,16 +1,16 @@
-const qcloud = require('../vendor/wafer2-client-sdk/index')
+const session = require('./session')
 const userInfoStoreKey = 'WX_USERINFO'
 
 const validateUser = function () {
   return new Promise(function (resolve, reject) {
-    if (!qcloud.Session.get()) return resolve(false)
+    if (!session.get()) return resolve(false)
 
     wx.checkSession({
       success: function () {
         return resolve(true)
       },
       fail: function () {
-        qcloud.Session.clear()
+        session.clear()
         return resolve(false)
       }
     })

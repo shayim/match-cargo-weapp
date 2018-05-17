@@ -12,7 +12,7 @@
     </view>
     <view class="btn-group">
         <button wx:if="{{!userInfo}}" loading="{{wxLogin}}
-                bindgetuserinfo="doLogin"
+                bindgetuserinfo="login"
                 lang = "{{lang}}"
                 type="primary" 
                 disabled = "{{wxLogin}}"

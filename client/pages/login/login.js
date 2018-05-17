@@ -1,6 +1,6 @@
 var qcloud = require('../../vendor/wafer2-client-sdk/index')
 var config = require('../../config')
-var { modal, userService } = require('../../services/index')
+var { modal, session, openDataLogin } = require('../../services/index')
 var app = getApp()
 
 Page({
@@ -15,16 +15,14 @@ Page({
      *           detail: { encryptoData, iv, signature, rawData
      *                     userInfo: { nickName, gender, language, city, province, country, avatarUrl }}
      */
-  doLogin (e) {
+  login (e) {
     var that = this
     that.setData({
       wxLogin: true
     })
-    qcloud.openDataLogin({
+    openDataLogin({
       userInfoData: e.detail,
       success (result) {
-        userService.saveUserInfo(result)
-
         that.setData({
           userInfo: result,
           wxLogin: false
@@ -38,7 +36,9 @@ Page({
   },
 
   doRequest () {
-    if (!qcloud.Session.get()) return
+    if (!session.get()) return
+
+    console.log('hi')
 
     var that = this
     that.setData({ wxLogin: true })

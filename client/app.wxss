@@ -1,16 +1,38 @@
 page {
     background: #F8F8F8;
+    font-family: -apple-system-font,Helvetica Neue,Helvetica,sans-serif;
+    font-size: 16px;
+}
+/* ------------------------------------------- */
+/* ***************DISPLAY START ****************/
+/* ------------------------------------------- */
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.over-layer {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom:0;
-    display: flex;
-    flex-direction: column;
-    font-family: -apple-system-font,Helvetica Neue,Helvetica,sans-serif;
-    font-size: 16px;
+    bottom: 0;
+    z-index: 100;
+    background-color: #eee;
 }
 
+.d-block {
+  display: block;
+}
+
+.d-line-block {
+  display: inline-block
+}
+
+/* ------------------------------------------- */
+/* ***************DISPLAY END ******************/
+/* ------------------------------------------- */
 
 .h1 {
   font-size: 48rpx;
@@ -25,9 +47,69 @@ page {
   font-weight: bolder;
 }
 
+.bg-primary {
+  color: #fff;
+  background-color: #1AAD19;
+}
+
+.bg-alert {
+  color: #fff;
+  background-color: #ffa200;
+}
+
+.bg-warning {
+  color: #fff;
+  background-color: #d60000;
+}
+
+
+/* ------------------------------------------- */
+/* ***************    Form    ******************/
+/* ------------------------------------------- */
+
+.form, .form-inline {
+  padding: 20rpx 0;
+  border: 10rpx solid #fff;
+  border-radius: 20rpx;
+}
+.form-head {
+ 
+  border-bottom: 2rpx solid black
+}
+.form-title, .form-subtitle {
+  display: block;
+  text-align: center;
+}
+.form-title {
+  font-size: 48rpx;
+  margin-top: 50rpx;
+  margin-bottom: 20rpx;
+}
+.form-subtitle {
+  font-size: 32rpx;
+  padding-top: 20rpx;
+  padding-bottom: 20rpx;
+}
+.form-inline input {
+   flex: 1
+}
+.control-group {
+  display: flex;
+  flex-direction: row;
+  background-color: #fff;
+  line-height: 48rpx;
+  padding: 10rpx;
+  margin-bottom: 20rpx;
+}
+
+.control-label {
+  margin-right: 20rpx;
+}
+
 .btn-group {
     margin: 20rpx 80rpx;
 }
 .btn-group button {
     margin-bottom: 20rpx;
 }
+
