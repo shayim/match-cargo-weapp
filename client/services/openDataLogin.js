@@ -15,8 +15,8 @@ const LOGIN_CONTANTS = {
   WX_HEADER_CODE: 'X-WX-Code',
   WX_HEADER_ENCRYPTED_DATA: 'X-WX-Encrypted-Data',
   WX_HEADER_IV: 'X-WX-IV',
-  WX_HEADER_ID: 'X-WX-Id',
-  WX_HEADER_SKEY: 'X-WX-Skey'
+  WX_HEADER_ID: 'X-WX-Id'
+
 }
 
 var getCodeResult = function getCode (callback) {

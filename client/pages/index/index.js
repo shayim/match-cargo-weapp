@@ -1,49 +1,57 @@
-const { userService } = require('../../services/index')
+const {
+  userService
+} = require('../../services/index')
+var app = getApp()
+
 Page({
   data: {
-    tplbtns: [{ zh_CN: '投保人', en: 'applicant' }, { zh_CN: '被保险人', en: 'insured' }],
-    selected: 'add-insured',
-    applicant: { type: '企业' },
-    placeholder: { name: '名称', id: '执照编号' }
+    title: {
+      en: 'Preset Information',
+      zh_CN: '添加常用信息'
+    },
+
+    tpls: [{
+      name: {
+        en: 'Applicant',
+        zh_CN: '投保人'
+      }
+    }, {
+      name: {
+        en: 'Insured',
+        zh_CN: '被保险人'
+      }
+    }, {
+      name: {
+        en: 'Cargo',
+        zh_CN: '被保货物'
+      }
+    }, {
+      name: {
+        en: 'Conveyance',
+        zh_CN: '运输方式'
+      }
+    }, {
+      name: {
+        en: 'Voyage',
+        zh_CN: '运输航线'
+      }
+    }],
+    lang: (app.systemInfo && app.systemInfo.language) || 'zh_CN'
   },
 
-  changeApplicantType (e) {
-    if (e.detail.value) {
-      this.setData({ applicant: { type: '企业' }, placeholder: { name: '名称', id: '执照编号' } })
-    } else {
-      this.setData({ applicant: { type: '个人' }, placeholder: { name: '姓名', id: '身份证号' } })
-    }
-  },
-
-  submitForm (e) {
-    console.log(e)
-    this.setData({ selected: '' })
-  },
-
-  add (e) {
-    console.log(e.currentTarget.dataset.controller)
-  },
-
-  addInsured () {
-
-  },
-
-  addCargo () {
-
-  },
-
-  addConveyance () {
-
-  },
-
-  addVoyage () {
-
+  chooseTpl (e) {
+    var tpl = e.currentTarget.dataset.tpl[0].toLowerCase() + e.currentTarget.dataset.tpl.substr(1)
+    wx.navigateTo({
+      url: `../${tpl}/${tpl}`
+    })
   },
 
   onLoad () {
     userService.validateUser().then(result => {
       if (!result) {
-        wx.navigateTo({ url: '../login/login' })
+        wx.navigateTo({
+          url: '../login/login'
+        })
       }
     })
   }

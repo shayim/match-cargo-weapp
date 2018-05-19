@@ -6,7 +6,7 @@ var app = getApp()
 Page({
   data: {
     wxLogin: false,
-    lang: app.systemInfo.language
+    lang: app.systemInfo && app.systemInfo.language ? app.systemInfo.language : 'zh_CN'
   },
 
   /**

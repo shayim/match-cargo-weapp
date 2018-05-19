@@ -1,0 +1,24 @@
+
+
+  <view class="container">
+    <form class="form-inline" bindsubmit="submitForm">
+      <view class="form-head">
+        <text class="form-title">{{title[lang]}}</text> 
+        <text class="form-subtitle bg-alert">{{subTitle[lang]}}</text>
+      </view>
+      <view class="control-group">
+        <label for="type" class="control-label">{{type[applicant.type][lang]}}</label>
+        <switch checked="{{applicant.type=='company'}}" id="type" name="type" catchchange="changeType"></switch> 
+      </view>
+      <view class="control-group">
+          <input id="name" name="name" placeholder="{{placeholder[applicant.type]['name'][lang]}}"/>
+      </view>
+      <view class="control-group" hidden>
+          <input id="id" name="id" placeholder="{{placeholder[applicant.type].id[lang]}}"/>
+      </view>
+      <view>
+          <button form-type="submit" type="primary" size="18" loading="{{false}}" disabled="{{false}}" hover-class="defaultTap">保存</button>
+      </view>
+      
+    </form>
+  </view>

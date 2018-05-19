@@ -1,20 +1,13 @@
-<import src="../templates/applicant/addApplicant.wxml"/>
 
 <view class="container">
     <view class="match-logo"  >
       <image src="../../images/match-logo.png" mode="aspectFill" />
     </view>
     <view class="title h1">
-      <text>添加常用信息</text>
+      <text>{{title[lang]}}</text>
     </view>
     <view class="btn-group">
-        <button type="primary" size="24" plain="{{true}}" bindtap="add" hover-class="button-hover" data-controller="applicant">投保人</button>
-        <button type="primary" size="24" plain="{{true}}" bindtap="add" hover-class="button-hover" data-controller="insured">被保险人</button>
-        <button type="primary" size="24" plain="{{true}}" bindtap="add" hover-class="button-hover" data-controller="cargo">被保货物</button>
-        <button type="primary" size="24" plain="{{true}}" bindtap="add" hover-class="button-hover" data-controller="conveyance">运输方式</button>
-        <button type="primary" size="24" plain="{{true}}" bindtap="add" hover-class="button-hover" data-controller="voyage">运输航线</button>
+        <button wx:for="{{tpls}}" wx:key="{{item.id}}" type="primary" size="24" plain="{{true}}" bindtap="chooseTpl" hover-class="button-hover" data-tpl="{{item.name['en']}}">{{item.name[lang]}}</button>
+       
     </view>
 </view>
-
-
-<template wx:if="{{selected=='add-applicant'}}" is="add-applicant" data="{{applicant, placeholder}}"/>
