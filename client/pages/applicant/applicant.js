@@ -1,3 +1,4 @@
+const applicantService = require('../../services/applicantService')
 const app = getApp()
 
 Page({
@@ -60,5 +61,9 @@ Page({
 
   submitForm (e) {
     console.log(e.detail.value)
+  },
+
+  onLoad () {
+    applicantService.getAll().then()
   }
 })

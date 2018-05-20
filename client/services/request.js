@@ -1,13 +1,16 @@
-var constants = require('./constants')
-var utils = require('./utils')
-var loginLib = require('./login')
+// var constants = require('./constants')
+// var utils = require('./utils')
 
+var { login } = require('./login')
+const userService = require('./userService')
+const session = require('./session')
+const { StackError, ERROR_TYPE } = require('./stackError')
 const REQUEST_CONSTANTS = {
   WX_HEADER_SKEY: 'X-WX-Skey'
 }
-const session = require('./session')
-const {StackError, LOGIN_ERROR_TYPE} = require('./stackError')
-const noop = function noop () {}
+
+const noop = function noop () { }
+
 const buildAuthHeader = function buildAuthHeader (session) {
   var header = {}
   if (session) {
@@ -19,12 +22,11 @@ const buildAuthHeader = function buildAuthHeader (session) {
 }
 
 function request (options) {
-  if (typeof options !== 'object') {
-    var message = '请求传参应为 object 类型，但实际传了 ' + (typeof options) + ' 类型'
-    throw new StackError(constants.ERR_INVALID_PARAMS, message)
+  if (!options.url) {
+    var message = '未设置网络请求链接'
+    throw new StackError(ERROR_TYPE.SETTING_REQUEST_URL, message)
   }
 
-  var requireLogin = options.login
   var success = options.success || noop
   var fail = options.fail || noop
   var complete = options.complete || noop
@@ -43,17 +45,28 @@ function request (options) {
   }
 
   // 是否已经进行过重试
-  var hasRetried = false
+  // var hasRetried = false
 
-  if (requireLogin) {
-    doRequestWithLogin()
-  } else {
-    doRequest()
-  }
+  userService.validateUser().then(result => {
+    if (result) {
+      console.log('hi')
+      doRequest()
+    } else {
+      userService.getUserScopes().then(authSetting => {
+        console.log('hi authSeeting')
+
+        if (authSetting['scope.userInfo']) {
+          requestWithAuthScope()
+        } else {
+          return new StackError(ERROR_TYPE.HAVENO_SCOPE_USERINFO, '用户未授权scope.userInfo')
+        }
+      })
+    }
+  })
 
   // 登录后再请求
-  function doRequestWithLogin () {
-    loginLib.login({
+  function requestWithAuthScope () {
+    login({
       success: doRequest,
       fail: callFail
     })
@@ -63,28 +76,20 @@ function request (options) {
   function doRequest () {
     var authHeader = buildAuthHeader(session.get())
 
-    if (!authHeader) return new StackError(LOGIN_ERROR_TYPE.REQUEST_MISSING_AUTH_SKEY, '')
+    if (!authHeader) return new StackError(ERROR_TYPE.REQUEST_MISSING_AUTH_SKEY, '')
 
-    wx.request(utils.extend({}, options, {
-      header: utils.extend({}, originHeader, authHeader),
+    wx.request(Object.assign({}, options, {
+      header: Object.assign({}, originHeader, authHeader),
 
       success: function (response) {
         var data = response.data
 
         console.log('data', data)
 
-        var error, message
         if (data && data.code === -1) {
-          session.clear()
-          // 如果是登录态无效，并且还没重试过，会尝试登录后刷新凭据重新请求
-          if (!hasRetried) {
-            hasRetried = true
-            doRequestWithLogin()
-            return
-          }
+          var error
 
-          message = '登录态已过期'
-          error = new StackError(data.error, message)
+          error = new StackError(ERROR_TYPE.REQUEST_RESPONSE_ERROR, data)
 
           callFail(error)
         } else {

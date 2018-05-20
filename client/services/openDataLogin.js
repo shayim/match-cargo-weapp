@@ -1,7 +1,7 @@
 const config = require('../config').service
 const session = require('./session')
 const userService = require('./userService')
-const { StackError, LOGIN_ERROR_TYPE } = require('./stackError')
+const { StackError, ERROR_TYPE } = require('./stackError')
 
 const noop = function noop () { }
 const defaultOptions = {
@@ -25,7 +25,7 @@ var getCodeResult = function getCode (callback) {
       callback(null, codeResult.code)
     },
     fail: function (codeError) {
-      var error = new StackError(LOGIN_ERROR_TYPE.WX_LOGIN_CODE_ERROR, '微信登录临时凭据错误', codeError)
+      var error = new StackError(ERROR_TYPE.WX_LOGIN_CODE, '微信登录临时凭据错误', codeError)
       callback(error, null)
     }
   })
@@ -35,7 +35,7 @@ var openDataLogin = function openDataLogin (options) {
   options = Object.assign({}, defaultOptions, options)
 
   if (!options.url) {
-    options.fail(new StackError(LOGIN_ERROR_TYPE.LOGIN_URL_NOT_FOUND, '缺少登录地址, 请在Config中设置'))
+    options.fail(new StackError(ERROR_TYPE.SETTING_LOGIN_URL, '未设置登录地址, 请在Config中设置'))
     return
   }
 
@@ -84,14 +84,14 @@ var openDataLogin = function openDataLogin (options) {
           options.success(userinfo)
         } else {
           var errorMessage = `登录失败(code:${code}, skey:${skey}, userInfo:${userinfo}, status:${status}, errMsg:${errMsg}`
-          var loginError = new StackError(LOGIN_ERROR_TYPE.LOGIN_SKEY_USERINFO_NOT_RECEIVED, errorMessage)
+          var loginError = new StackError(ERROR_TYPE.LOGIN_SKEY_USERINFO_NOT_RECEIVED, errorMessage)
           options.fail(loginError)
         }
       },
 
       // 响应错误
       fail: function (loginServerError) {
-        var error = new StackError(LOGIN_ERROR_TYPE.LOGIN_FAILED, '登录失败，服务器错误', loginServerError)
+        var error = new StackError(ERROR_TYPE.LOGIN_FAILED, '登录失败，服务器错误', loginServerError)
         options.fail(error)
       }
     })
@@ -100,4 +100,4 @@ var openDataLogin = function openDataLogin (options) {
   doLogin()
 }
 
-module.exports = { openDataLogin }
+module.exports = { openDataLogin, LOGIN_CONTANTS }
