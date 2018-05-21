@@ -59,4 +59,6 @@ const getUserScopes = () => {
   })
 }
 
-module.exports = { hasValidSession, getUserInfo, saveUserInfo, getUserScopes, hasUserInfoScope }
+module.exports = {
+  hasValidSession, getUserInfo, saveUserInfo, getUserScopes, hasUserInfoScope
+}

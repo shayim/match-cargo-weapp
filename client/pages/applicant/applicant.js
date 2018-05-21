@@ -61,9 +61,10 @@ Page({
 
   submitForm (e) {
     console.log(e.detail.value)
+    applicantService.add(e.detail.value).then(res => console.log(res)).catch(err => console.log(err))
   },
 
   onLoad () {
-    applicantService.remove('klmnopq').then(res => console.log(res)).catch(err => console.log(err))
+
   }
 })
