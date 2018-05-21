@@ -6,14 +6,14 @@ App({
 
     this.systemInfo = systemInfo.get()
 
-    userService.validateUser().then(result => { this.userInfo = userService.getUserInfo() })
-    userService.getUserScopes().then(result => { this.userAuthScopes = result })
+    userService.hasValidSession().then(result => {
+      this.userInfo = userService.getUserInfo()
+    })
   },
   onShow (params) {
 
   },
 
-  userAuthScopes: null,
   userInfo: null,
   systemInfo: null
 })

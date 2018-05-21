@@ -1,108 +1,65 @@
-// var constants = require('./constants')
-// var utils = require('./utils')
-
-var { login } = require('./login')
 const userService = require('./userService')
 const session = require('./session')
-const { StackError, ERROR_TYPE } = require('./stackError')
+const {
+  StackError,
+  ERROR_TYPE
+} = require('./stackError')
 const REQUEST_CONSTANTS = {
   WX_HEADER_SKEY: 'X-WX-Skey'
 }
-
-const noop = function noop () { }
 
 const buildAuthHeader = function buildAuthHeader (session) {
   var header = {}
   if (session) {
     header[REQUEST_CONSTANTS.WX_HEADER_SKEY] = session
-    return session
+    return header
   } else {
     return null
   }
 }
 
-function request (options) {
-  if (!options.url) {
-    var message = '未设置网络请求链接'
-    throw new StackError(ERROR_TYPE.SETTING_REQUEST_URL, message)
-  }
-
-  var success = options.success || noop
-  var fail = options.fail || noop
-  var complete = options.complete || noop
-  var originHeader = options.header || {}
-
-  // 成功回调
-  var callSuccess = function () {
-    success.apply(null, arguments)
-    complete.apply(null, arguments)
-  }
-
-  // 失败回调
-  var callFail = function (error) {
-    fail(null, error)
-    complete(null, error)
-  }
-
-  // 是否已经进行过重试
-  // var hasRetried = false
-
-  userService.validateUser().then(result => {
-    if (result) {
-      console.log('hi')
-      doRequest()
-    } else {
-      userService.getUserScopes().then(authSetting => {
-        console.log('hi authSeeting')
-
-        if (authSetting['scope.userInfo']) {
-          requestWithAuthScope()
-        } else {
-          return new StackError(ERROR_TYPE.HAVENO_SCOPE_USERINFO, '用户未授权scope.userInfo')
-        }
-      })
-    }
-  })
-
-  // 登录后再请求
-  function requestWithAuthScope () {
-    login({
-      success: doRequest,
-      fail: callFail
+const wxRequest = function (url, data, header, method = 'GET', dataType = 'json', responseType = 'text') {
+  return new Promise((resolve, reject) => {
+    let headers = header || {}
+    userService.hasValidSession().then(valid => {
+      if (!valid) {
+        reject(new StackError(ERROR_TYPE.REQUEST_MISSING_SESSION_KEY, 'missing skey or session outdated'))
+      }
     })
-  }
+    headers = Object.assign(headers, buildAuthHeader(session.get()))
 
-  // 实际进行请求的方法
-  function doRequest () {
-    var authHeader = buildAuthHeader(session.get())
+    wx.request({
+      url,
+      data,
+      header: headers,
+      method,
+      dataType,
+      responseType,
+      success: (res) => resolve(res),
+      fail: err => reject(err)
+    })
+  })
+}
 
-    if (!authHeader) return new StackError(ERROR_TYPE.REQUEST_MISSING_AUTH_SKEY, '')
+const get = function (url, query, header) {
+  return wxRequest(url, query, header)
+}
 
-    wx.request(Object.assign({}, options, {
-      header: Object.assign({}, originHeader, authHeader),
+const post = function (url, data, header) {
+  return wxRequest(url, data, header, 'POST')
+}
 
-      success: function (response) {
-        var data = response.data
+const put = function (url, data, header) {
+  return wxRequest(url, data, header, 'PUT')
+}
 
-        console.log('data', data)
-
-        if (data && data.code === -1) {
-          var error
-
-          error = new StackError(ERROR_TYPE.REQUEST_RESPONSE_ERROR, data)
-
-          callFail(error)
-        } else {
-          callSuccess.apply(null, arguments)
-        }
-      },
-
-      fail: callFail,
-      complete: noop
-    }))
-  };
-};
+const remove = function (url, header) {
+  return wxRequest(url, null, header, 'DELETE')
+}
 
 module.exports = {
-  request: request
+  get: get,
+  post: post,
+  put: put,
+  delete: remove
 }

@@ -64,6 +64,6 @@ Page({
   },
 
   onLoad () {
-    applicantService.getAll().then()
+    applicantService.remove('klmnopq').then(res => console.log(res)).catch(err => console.log(err))
   }
 })

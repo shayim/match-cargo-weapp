@@ -1,7 +1,7 @@
 const session = require('./session')
 const userInfoStoreKey = 'WX_USERINFO'
 
-const validateUser = function () {
+const hasValidSession = function () {
   return new Promise(function (resolve, reject) {
     if (!session.get()) return resolve(false)
 
@@ -17,7 +17,7 @@ const validateUser = function () {
   })
 }
 const getUserInfo = () => {
-  if (!validateUser()) return null
+  if (!hasValidSession()) return null
 
   try {
     var userInfo = wx.getStorageSync(userInfoStoreKey)
@@ -42,14 +42,21 @@ const saveUserInfo = (userInfo) => {
   }
 }
 
+const hasUserInfoScope = () => {
+  return getUserScopes().then(authSetting => authSetting['scope.userInfo'])
+}
+
 const getUserScopes = () => {
   return new Promise((resolve, reject) => {
     wx.getSetting({
       success: (res) => {
         resolve(res.authSetting)
+      },
+      fail: (err) => {
+        reject(err)
       }
     })
   })
 }
 
-module.exports = { validateUser, getUserInfo, saveUserInfo, getUserScopes }
+module.exports = { hasValidSession, getUserInfo, saveUserInfo, getUserScopes, hasUserInfoScope }

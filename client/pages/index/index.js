@@ -47,7 +47,7 @@ Page({
   },
 
   onLoad () {
-    userService.validateUser().then(result => {
+    userService.hasValidSession().then(result => {
       if (!result) {
         wx.navigateTo({
           url: '../login/login'

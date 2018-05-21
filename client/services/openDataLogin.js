@@ -73,7 +73,7 @@ var openDataLogin = function openDataLogin (options) {
         //     errMsg: "request:ok"
         // }
 
-        //  console.log('login result', result)
+        console.log('login result', result)
 
         var { data: {code, data: { skey, userinfo }}, status, errMsg } = result
 
